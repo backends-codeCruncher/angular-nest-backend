@@ -1,0 +1,42 @@
+{
+    "material-icon-theme.activeIconPack": "nest",
+    "auto-close-tag.activationOnLanguage": [
+        "html"
+    ],
+    "bracket-pair-colorizer-2.colors": [
+        "#fafafa",
+        "#9F51B6",
+        "#F7C244",
+        "#F07850",
+        "#9CDD29",
+        "#C497D4"
+    ],
+    "workbench.colorCustomizations": {
+        "statusBar.background": "#121016",
+        "statusBar.debuggingBackground": "#121016",
+        "statusBar.debuggingForeground": "#525156",
+        "debugToolBar.background": "#121016",
+    },
+    "[dart]": {
+        "editor.formatOnSave": false,
+        "editor.formatOnType": true,
+        "editor.selectionHighlight": false,
+        "editor.suggest.snippetsPreventQuickSuggestions": false,
+        "editor.suggestSelection": "first",
+        "editor.tabCompletion": "onlySnippets",
+        "editor.wordBasedSuggestions": "currentDocument"
+    },
+    "editor.minimap.enabled": false,
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.startupEditor": "none",
+    "workbench.colorTheme": "Aura Soft Dark",
+    "terminal.integrated.env.windows": {},
+    "files.autoSave": "off",
+    "[jsonc]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "bracket-pair-colorizer-2.depreciation-notice": false,
+    "console-ninja.featureSet": "Community",
+    "editor.fontSize": 16,
+    "editor.fontFamily": "Cascadia Code, 'Courier New', monospace"
+  }
