@@ -1,4 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
+
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -6,8 +14,17 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class AuthService {
-  create(createUserDto: CreateUserDto): Promise<User> {
-    return null;
+  private readonly logger: Logger = new Logger('AuthService');
+
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    try {
+      const user = new this.userModel(createUserDto);
+      return user.save();
+    } catch (error) {
+      if (error.code === 11000) throw new BadRequestException(error.detail);
+    }
   }
 
   findAll() {
@@ -24,5 +41,15 @@ export class AuthService {
 
   remove(id: number) {
     return `This action removes a #${id} auth`;
+  }
+
+  private handleDBException(error: any) {
+    this.logger.error(error.detail);
+    switch (error.code) {
+      case 11000:
+
+      default:
+        throw new InternalServerErrorException('Error en servicio de Usuarios');
+    }
   }
 }
