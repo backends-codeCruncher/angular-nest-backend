@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
-import { ApiTags } from '@nestjs/swagger';
+
+import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateUserDto } from './dto/create-user.dto';
+import { User } from './entities/user.entity';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -10,8 +20,17 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  @ApiResponse({
+    status: 201,
+    description: 'User created successfully',
+    type: User,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+  })
+  create(@Body() createUserDto: CreateUserDto): Promise<User> {
+    return this.authService.create(createUserDto);
   }
 
   @Get()
@@ -25,7 +44,7 @@ export class AuthController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
+  update(@Param('id') id: string, @Body() updateAuthDto: UpdateUserDto) {
     return this.authService.update(+id, updateAuthDto);
   }
 
