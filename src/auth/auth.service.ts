@@ -21,9 +21,12 @@ export class AuthService {
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
       const user = new this.userModel(createUserDto);
-      return user.save();
+      return await user.save();
     } catch (error) {
-      if (error.code === 11000) throw new BadRequestException(error.detail);
+      if (error.code === 11000) {
+        throw new BadRequestException(`${createUserDto.email} already exists`);
+      }
+      throw new InternalServerErrorException('Something terrible happened!');
     }
   }
 
@@ -41,15 +44,5 @@ export class AuthService {
 
   remove(id: number) {
     return `This action removes a #${id} auth`;
-  }
-
-  private handleDBException(error: any) {
-    this.logger.error(error.detail);
-    switch (error.code) {
-      case 11000:
-
-      default:
-        throw new InternalServerErrorException('Error en servicio de Usuarios');
-    }
   }
 }
