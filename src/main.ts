@@ -18,8 +18,8 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('')
-    .setDescription('')
+    .setTitle('MEAN')
+    .setDescription('Esta es la API utilizada en el curso Angular: De Cero a Experto')
     .setVersion('1.0')
     .build();
 
