@@ -9,10 +9,9 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
-import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
+import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -31,6 +30,20 @@ export class AuthController {
   })
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.authService.create(createUserDto);
+  }
+
+  @Post('/login')
+  @ApiResponse({
+    status: 200,
+    description: 'User found',
+    type: User,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Credential not valid',
+  })
+  login(@Body() loginUserDto: LoginUserDto): Promise<User> {
+    return this.authService.login(loginUserDto);
   }
 
   @Get()
