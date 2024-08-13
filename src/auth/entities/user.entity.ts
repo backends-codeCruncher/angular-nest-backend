@@ -20,7 +20,7 @@ export class User {
     description: 'User password',
   })
   @Prop({ minlength: 6, required: true })
-  password: string;
+  password?: string;
 
   @ApiProperty({
     description: 'User active',
