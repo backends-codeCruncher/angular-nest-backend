@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -18,6 +19,7 @@ import {
   UpdateUserDto,
 } from './dto';
 import { LoginResponse } from './interfaces';
+import { AuthGuard } from './guards/auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -41,7 +43,7 @@ export class AuthController {
   @Post('/login')
   @ApiResponse({
     status: 200,
-    description: 'User found',
+    description: 'User logged succesfully',
     type: User,
   })
   @ApiResponse({
@@ -66,8 +68,18 @@ export class AuthController {
     return this.authService.register(registerUserDto);
   }
 
+  @UseGuards(AuthGuard)
   @Get()
-  findAll() {
+  @ApiResponse({
+    status: 200,
+    description: 'List of users',
+    type: [User],
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized user',
+  })
+  findAll(): Promise<User[]> {
     return this.authService.findAll();
   }
 
