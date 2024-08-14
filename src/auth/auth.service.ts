@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   Logger,
   UnauthorizedException,
+  Request,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
@@ -11,12 +12,7 @@ import { Model } from 'mongoose';
 
 import * as bcrypt from 'bcryptjs';
 
-import {
-  CreateUserDto,
-  LoginUserDto,
-  RegisterUserDto,
-  UpdateUserDto,
-} from './dto';
+import { CreateUserDto, LoginUserDto, RegisterUserDto } from './dto';
 import { JwtPayload, LoginResponse } from './interfaces';
 import { User } from './entities/user.entity';
 
@@ -83,18 +79,6 @@ export class AuthService {
     const user = await this.userModel.findById(id);
     const { password, ...rest } = user.toJSON();
     return rest;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateUserDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
   }
 
   getJwtToken(payload: JwtPayload) {

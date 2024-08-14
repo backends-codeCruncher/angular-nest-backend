@@ -3,9 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   UseGuards,
   Request,
 } from '@nestjs/common';
@@ -13,12 +10,7 @@ import { AuthService } from './auth.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { User } from './entities/user.entity';
-import {
-  CreateUserDto,
-  LoginUserDto,
-  RegisterUserDto,
-  UpdateUserDto,
-} from './dto';
+import { CreateUserDto, LoginUserDto, RegisterUserDto } from './dto';
 import { LoginResponse } from './interfaces';
 import { AuthGuard } from './guards/auth.guard';
 
@@ -84,18 +76,13 @@ export class AuthController {
     return this.authService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateUserDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @UseGuards(AuthGuard)
+  @Get('/check-token')
+  checkToken(@Request() req: Request): LoginResponse {
+    const user = req['user'] as User;
+    return  {
+      user,
+      token: this.authService.getJwtToken({id: user._id})
+    }
   }
 }
