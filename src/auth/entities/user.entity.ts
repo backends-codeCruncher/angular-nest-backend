@@ -3,6 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 @Schema()
 export class User {
+  _id?: string;
+
   @ApiProperty({
     description: 'User email',
     uniqueItems: true,

@@ -8,10 +8,16 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+
 import { User } from './entities/user.entity';
-import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto';
+import {
+  CreateUserDto,
+  LoginUserDto,
+  RegisterUserDto,
+  UpdateUserDto,
+} from './dto';
+import { LoginResponse } from './interfaces';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -42,8 +48,22 @@ export class AuthController {
     status: 401,
     description: 'Credential not valid',
   })
-  login(@Body() loginUserDto: LoginUserDto) {
+  login(@Body() loginUserDto: LoginUserDto): Promise<LoginResponse> {
     return this.authService.login(loginUserDto);
+  }
+
+  @Post('/register')
+  @ApiResponse({
+    status: 201,
+    description: 'User registered successfully',
+    type: User,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+  })
+  register(@Body() registerUserDto: RegisterUserDto): Promise<LoginResponse> {
+    return this.authService.register(registerUserDto);
   }
 
   @Get()
