@@ -42,7 +42,7 @@ export class AuthController {
     status: 401,
     description: 'Credential not valid',
   })
-  login(@Body() loginUserDto: LoginUserDto): Promise<User> {
+  login(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto);
   }
 
