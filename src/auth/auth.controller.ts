@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -79,7 +80,7 @@ export class AuthController {
     status: 401,
     description: 'Unauthorized user',
   })
-  findAll(): Promise<User[]> {
+  findAll(@Request() req: Request): Promise<User[]> {
     return this.authService.findAll();
   }
 

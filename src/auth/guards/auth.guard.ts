@@ -1,17 +1,49 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from '../interfaces';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private authService: AuthService,
+  ) {}
 
-  canActivate(context: ExecutionContext): Promise<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
 
-    
+    if (!token) throw new UnauthorizedException('Token not found on request');
 
-    return Promise.resolve(true);
+    try {
+      const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
+        secret: process.env.JWT_SECRET,
+      });
+
+      const user = await this.authService.findUserById(payload.id);
+
+      if (!user) {
+        throw new UnauthorizedException(`User with id ${payload.id} not found`);
+      }
+
+      if (!user.isActive) {
+        throw new UnauthorizedException(
+          `User with id ${payload.id} is not active`,
+        );
+      }
+
+      request['user'] = user;
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
+
+    return true;
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
